@@ -1,4 +1,4 @@
-const urlBase = 'http://COP4331-5.com/LAMPAPI';
+const urlBase = 'http://labfor4331.xyz/LAMPAPI';
 const extension = 'php';
 
 let userId = 0;
@@ -46,7 +46,7 @@ function doLogin()
 
 				saveCookie();
 	
-				window.location.href = "color.html";
+				window.location.href = "registerPage.html"; 
 			}
 		};
 		xhr.send(jsonPayload);
@@ -182,4 +182,34 @@ function searchColor()
 		document.getElementById("colorSearchResult").innerHTML = err.message;
 	}
 	
+}
+
+function doRegister()
+{
+	let login = document.getElementById("registerLoginName").value;
+	let password = document.getElementById("registerPassword").value;
+	let firstName = document.getElementById("registerFirstName").value;
+	let lastName = document.getElementById("registerLastName").value;
+
+	let tmp = {loginName: login, password: password, firstName: firstName, lastName: lastName};
+	let jsonPayload = JSON.stringify(tmp);
+
+	let url = urlBase + '/Register.' + extension;
+
+	let xhr = new XMLHttpRequest();
+	xhr.open("POST", url, true);
+	xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+
+	xhr.onreadystatechange = function () {
+		if (xhr.readyState === 4) {
+			if (xhr.status === 200) {
+				let jsonResponse = JSON.parse(xhr.responseText);
+				document.getElementById("registerResult").innerHTML = jsonResponse.message;
+			} else {
+				document.getElementById("registerResult").innerHTML = "Error: Unable to register.";
+			}
+		}
+	};
+
+	xhr.send(jsonPayload);
 }
