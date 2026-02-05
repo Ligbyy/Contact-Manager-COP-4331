@@ -6,24 +6,24 @@
 }
 
 body {
-    background-color: #f8fafc;
+    background: linear-gradient(180deg,#FAE8B4 50%, #d9dbc5f8 100%);
     color: #1e293b;
 }
 
-/* Navigation */
+/* ========== Navigation Bar ======== */
 .navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 1.5rem 10%;
-    background: white;
+    background: #43a0eb;
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
 .logo {
     font-size: 1.5rem;
     font-weight: 700;
-    color: #059669; /* Paradise Green */
+    color: #ffffffdc;
 }
 
 .logo span {
@@ -38,7 +38,7 @@ body {
 }
 
 .nav-links a.active, .nav-links a:hover {
-    color: #059669;
+    color: #ffffff;
 }
 
 .logout-btn {
@@ -50,8 +50,8 @@ body {
     font-weight: 500;
 }
 
-/* Search Hero Section */
-.hero-section {
+/* ========= Contact Management UX Section - Main Part ===============*/
+.contactManagement {
     height: 80vh;
     display: flex;
     justify-content: center;
@@ -110,4 +110,16 @@ p {
     margin-top: 1.5rem;
     font-size: 0.9rem;
     color: #94a3b8;
+}
+
+/* Foot Design */
+
+footer {
+  text-align: center; /* Centers text and inline elements */
+  padding: 10px; /* Optional: adds some space around the content */
+  background-color: #333; /* Optional: for visibility */
+}
+
+footer p{
+    color: white;
 }
