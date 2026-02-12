@@ -27,9 +27,8 @@
 <body>
     <!-- Management Bar -->
     <nav class="navbar">
-        <div class="logo">[Insert <span>PageName ]</span></div>
+        <div class="namePlate"><span id = "userNamePlate"></span></div>
         <div class="nav-links">
-            <a href="#" class="active">Your Contacts</a>
 
             <!-- Logout Button -->
             <button class="logout-btn" onclick="doLogout()">Logout </button> 
@@ -57,8 +56,16 @@
     </footer>
 
     <script>
-        document.getElementById("loginName").innerText =
-        `Hello, ${firstName} ${lastName}`;
+        // 1. First, pull the data from the cookies
+        readCookie(); 
+
+        // 2. Insert into the Navbar (Small version)
+        document.getElementById("namePlateText").innerText = `${firstName} ${lastName}`;
+
+        // 3. Insert into the Welcome Header (Big version)
+        document.getElementById("welcomeName").innerText = firstName;
     </script>
+
+        
 </body>
 </html>
