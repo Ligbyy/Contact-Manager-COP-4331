@@ -42,19 +42,21 @@
         <label for="search-bar">Search Your Contacts</label>
         
         <!-- Search Bar -->
-        <input type="search" id ="searchText" placeholder="Search Contacts">
+        <input type="search" id ="searchText" placeholder="Search Contacts" oninput="searchContacts()">
     </div>
 
     <!-- Contact Cards -->
-    <div id="contactCardsContainer" class = "contact-cards">
-        <template id="contactCardTemplate" data-contact-card-template >
-            <article class = "card">
-                <h3 class="firstName">John <span class = "lastName">Doe</span></h3>
-                <div class="Email"> [Email] </div>
-                <div class="Phone">[Phone]</div>
-            </article>
-        </template>
-    </div>
+    <template id="contactCardTemplate" data-contact-card-template >
+        <article class = "card">
+            <h3 class="name-header">
+                <span class="firstName">John</span>
+                <span class="lastName">Doe</span>
+            </h3>
+            <div class="Email"> [Email] </div>
+            <div class="Phone">[Phone]</div>
+        </article>
+    </template>
+    <div id="contactCardsContainer" class = "contact-cards"> </div>
 
 
     <!-- Footer: Information Center -->
