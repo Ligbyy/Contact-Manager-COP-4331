@@ -17,7 +17,7 @@ function doLogin()
   const out = document.getElementById("loginResult");
   if (out) out.innerHTML = "";
 
-  const payload = JSON.stringify({ login: login, password: password });
+  const jsonPayload = JSON.stringify({ login: login, password: password });
   const url = `${urlBase}/Login.${extension}`;
 
   const xhr = new XMLHttpRequest();
@@ -63,7 +63,7 @@ function doLogin()
     window.location.href = "contactManager.html"; // Go to contact page if successful.
   };
 
-  xhr.send(payload);
+  xhr.send(jsonPayload);
 }
 
 function doRegister()
@@ -82,7 +82,7 @@ function doRegister()
     return;
   }
 
-  const payload = JSON.stringify({
+  const jsonPayload = JSON.stringify({
     loginName: login,
     password: password,
     firstName: f,
@@ -135,10 +135,10 @@ function doRegister()
     lastName = json.lastName || l;
 
     saveCookie();
-    window.location.href = "home.html";
+    window.location.href = "contactManager.html";
   };
 
-  xhr.send(payload);
+  xhr.send(jsonPayload);
 }
 
 function doLogout()
@@ -167,8 +167,6 @@ function saveCookie()
 
 function readCookie()
 {
-
-
   const cookies = document.cookie.split(";").map(c => c.trim());
   const map = {};
 
@@ -198,98 +196,195 @@ function requireLogin()
 }
 
 
-function addColor()
+function addContact()
 {
-  const newColor = document.getElementById("colorText")?.value ?? "";
-  const out = document.getElementById("colorAddResult");
-  if (out) out.innerHTML = "";
+  let firstName = document.getElementById("addFirstName").value;
+  let lastName = document.getElementById("addLastName").value;
+  let phone = document.getElementById("addPhone").value;
+  let email = document.getElementById("addEmail").value;
 
-  if (!userId || userId < 1)
-  {
-    if (out) out.innerHTML = "Please login first.";
-    return;
-  }
+  document.getElementById("addContactResult").innerHTML = "";
 
-  const payload = JSON.stringify({ color: newColor, userId: userId });
-  const url = `${urlBase}/AddColor.${extension}`;
+  let jsonPayload = JSON.stringify({
+        firstName: firstName,
+        lastName: lastName,
+        phone: phone,
+        email: email,
+        userId: userId
+    });
 
-  const xhr = new XMLHttpRequest();
+  let url = `${urlBase}/AddContact.${extension}`;
+
+  let xhr = new XMLHttpRequest();
   xhr.open("POST", url, true);
   xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
-
-  xhr.onreadystatechange = function ()
-  {
-    if (xhr.readyState !== 4) return;
-
-    if (xhr.status === 200)
+  try
     {
-      if (out) out.innerHTML = "Color has been added";
+        xhr.onreadystatechange = function() 
+        {
+            if (this.readyState == 4 && this.status == 200) 
+            {
+                document.getElementById("addContactResult").innerHTML = "Contact has been added";
+            }
+        };
+        xhr.send(jsonPayload);
     }
-    else
+    catch(err)
     {
-      if (out) out.innerHTML = `Add failed (HTTP ${xhr.status}).`;
-      console.error("AddColor error:", xhr.status, xhr.responseText);
+        document.getElementById("addContactResult").innerHTML = err.message;
     }
-  };
-
-  xhr.send(payload);
 }
 
-/* Searches for a user the database. 
+/* 
+    Searches for a user the database. 
     Takes a text input that should be correlated to a name.
-    Returns 
+    Returns array of JSON object listing all relevant contacts (email, #, fName, lName)
 */
 function searchContacts()
 {
-  const srch = document.getElementById("searchInfo")?.value ?? "";
-  const out = document.getElementById("colorSearchResult");
-  if (out) out.innerHTML = "";
+  const searchInput = document.getElementById("searchText");
 
-  if (!userId || userId < 1)
-  {
-    if (out) out.innerHTML = "Please login first.";
+  // If the input doesn't exist, exit early before we try to access .value
+  if (!searchInput) {
+      console.error("Search input field not found in HTML!");
+      return; 
+  }
+
+  let srch = searchInput.value;
+
+  const contactContainer = document.getElementById("contactCardsContainer");
+  const contactCardTemplate = document.getElementById("contactCardTemplate");
+
+  // Verify the container and template exist before proceeding
+  if (!contactContainer || !contactCardTemplate) {
+    console.error("Missing required HTML elements: container or template.");
     return;
   }
 
-  const payload = JSON.stringify({ search: srch, userId: userId });
-  const url = `${urlBase}/SearchColors.${extension}`;
+  if (!userId || userId < 1)
+  {
+    console.error("No valid user.");
+    return;
+  }
+
+  contactContainer.innerHTML = '<p style="color:white; grid-column: 1/-1; text-align:center;">Searching...</p>';
+
+  let jsonPayload = JSON.stringify({ search: srch, userId: userId });
+  const url = `${urlBase}/SearchContacts.${extension}`; // Access API for searching the relevant database and tables.
 
   const xhr = new XMLHttpRequest();
   xhr.open("POST", url, true);
   xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+  xhr.onreadystatechange = function () {
+        if (xhr.readyState !== 4) return;
 
-  xhr.onreadystatechange = function ()
-  {
-    if (xhr.readyState !== 4) return;
+        // 2. Clear the "Searching..." message
+        contactContainer.innerHTML = "";
 
-    if (xhr.status !== 200)
-    {
-      if (out) out.innerHTML = `Search failed (HTTP ${xhr.status}).`;
-      console.error("SearchColors error:", xhr.status, xhr.responseText);
-      return;
-    }
+        if (xhr.status !== 200) {
+            contactContainer.innerHTML = `<p style="color:red; grid-column: 1/-1;">Error: ${xhr.status}</p>`;
+            return;
+        }
 
-    let json;
-    try
-    {
-      json = JSON.parse(xhr.responseText);
-    }
-    catch (e)
-    {
-      if (out) out.innerHTML = "Search failed (server returned non-JSON).";
-      console.error("SearchColors non-JSON response:", xhr.responseText);
-      return;
-    }
+        try {
+            const json = JSON.parse(xhr.responseText);
 
-    if (out) out.innerHTML = "Color(s) has been retrieved";
+            if (!json.results || json.results.length === 0) {
+                contactContainer.innerHTML = `<p style="color:white; grid-column: 1/-1; text-align:center;">No contacts found.</p>`;
+                return;
+            }
 
-    const results = Array.isArray(json.results) ? json.results : [];
-    const html = results.map(x => `${x}`).join("<br/>\r\n");
+            // 3. Loop through results and clone the template
+            json.results.forEach(contact => {
+                const card = contactCardTemplate.content.cloneNode(true);
 
-    // Your old code wrote into the first <p> tag; keep same behavior:
-    const p = document.getElementsByTagName("p")[0];
-    if (p) p.innerHTML = html;
-  };
+                // Use optional chaining (?.) to prevent crashes if a class is missing in HTML
+                if (card.querySelector(".firstName")) card.querySelector(".firstName").innerText = contact.first || "";
+                if (card.querySelector(".lastName")) card.querySelector(".lastName").innerText = contact.last || "";
+                if (card.querySelector(".Email")) card.querySelector(".Email").innerText = contact.email || "";
+                if (card.querySelector(".Phone")) card.querySelector(".Phone").innerText = contact.phone || "";
 
-  xhr.send(payload);
+                contactContainer.appendChild(card);
+            });
+
+        } catch (e) {
+            console.error("Parsing Error:", e);
+            contactContainer.innerHTML = `<p style="color:red; grid-column: 1/-1;">Server error. Try again.</p>`;
+        }
+    };
+
+    xhr.send(jsonPayload);
 }
+
+
+/*
+function searchContacts() {
+    const srch = document.getElementById("searchText")?.value ?? "";
+    const contactContainer = document.getElementById("contactCardsContainer");
+    const contactCardTemplate = document.getElementById("contactCardTemplate");
+
+    if (!contactContainer || !contactCardTemplate) {
+        console.error("HTML elements missing. Check your IDs!");
+        return;
+    }
+
+    // 1. Show the user something is happening
+    contactContainer.innerHTML = '<p style="color:white; text-align:center;">Searching...</p>';
+
+    // 2. This is your EXACT API structure
+    const mockResponse = {
+        "results": [
+            {
+                "first": "Jane",
+                "last": "Doe",
+                "email": "jane@example.com",
+                "phone": "321-555-0199"
+            },
+            {
+                "first": "Gemini",
+                "last": "Test",
+                "email": "gemini@ucf.edu",
+                "phone": "407-555-0123"
+            }
+        ],
+        "error": ""
+    };
+
+    // 3. Simulate the delay of the database
+    setTimeout(() => {
+        contactContainer.innerHTML = ""; // Clear "Searching..."
+
+        if (mockResponse.results.length === 0) {
+            contactContainer.innerHTML = '<p style="color:white;">No results found.</p>';
+            return;
+        }
+
+        mockResponse.results.forEach(contact => {
+            const card = contactCardTemplate.content.cloneNode(true);
+            
+            // Note: These must match the CLASS names in your HTML <template>
+            // and the KEY names in your JSON (contact.first, contact.email, etc.)
+            card.querySelector(".firstName").innerText = contact.first;
+            card.querySelector(".lastName").innerText = contact.last;
+            card.querySelector(".Email").innerText = contact.email;
+            card.querySelector(".Phone").innerText = contact.phone;
+
+            contactContainer.appendChild(card);
+        });
+    }, 400); 
+}
+*/
+function openAddModal() {
+    document.getElementById("addModal").classList.remove("hide");
+}
+
+function closeAddModal() {
+    document.getElementById("addModal").classList.add("hide");
+    // Optional: Clear the result message when closing
+    document.getElementById("addContactResult").innerHTML = "";
+}
+
+// Update your existing addContact to close the modal on success
+// After document.getElementById("addContactResult").innerHTML = "Contact has been added";
+// Add: setTimeout(closeAddModal, 1500);
+

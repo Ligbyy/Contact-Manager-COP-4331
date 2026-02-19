@@ -9,7 +9,7 @@
     -->
 
 <!DOCTYPE html> <!-- Declares the HTML type -->
-<html lang = "en">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -21,57 +21,80 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="css/contactPage.css">
     <!-- Functionality -->
-     <script type="text/javascript" src="js/code.js"></script>
-
+    <script type="text/javascript" src="js/code.js"></script>
 </head>
 
 <body>
-    <!-- Management Bar -->
-    <nav class="navbar">
-        <div class="namePlate"><span id = "namePlateText"></span></div>
-        <div class="nav-links">
-
-            <!-- Logout Button -->
-            <button class="logout-btn" onclick="doLogout()">Logout</button> 
+<div class="shell">
+    <header class="topbar">
+        <div class="brand">
+            <div class="logo" aria-hidden="true"></div>
+            <div>
+                <h1 id="namePlateText">Explorer</h1> 
+                <p>Deep Sea Fleet Manager</p>
+            </div>
         </div>
-    </nav>
+        <button class="btn btn-ghost" onclick="doLogout()">Surface (Logout)</button>
+    </header>
 
-    <!-- Search and Contact Control Section -->
-    <div class="search-wrapper">
-        <label for="search-bar">Search Your Contacts</label>
-        
-        <!-- Search Bar -->
-        <input type="search" id ="searchText" placeholder="Search Contacts">
+    <section class="search-wrapper">
+        <label for="searchText">Search Your Contacts</label>
+        <div class="search-controls">
+            <input type="text" id="searchText" class="input" placeholder="Scan the depths..." onkeyup="searchContacts()">
+            
+            <button class="btn btn-primary" onclick="openAddModal()">
+                <i class="fas fa-plus"></i> Add Contact
+            </button>
+        </div>
+    </section>
+
+    <div id="contactCardsContainer" class="contact-cards"></div>
+
+    <div id="addModal" class="modal-overlay hide">
+        <div class="panel modal-content">
+            <h3>Add New Contact</h3>
+            
+            <div class="field">
+                <span class="label">First Name</span>
+                <input type="text" id="addFirstName" class="input" placeholder="First Name">
+            </div>
+            <div class="field">
+                <span class="label">Last Name</span>
+                <input type="text" id="addLastName" class="input" placeholder="Last Name">
+            </div>
+            <div class="field">
+                <span class="label">Phone</span>
+                <input type="text" id="addPhone" class="input" placeholder="Phone">
+            </div>
+            <div class="field">
+                <span class="label">Email</span>
+                <input type="text" id="addEmail" class="input" placeholder="Email">
+            </div>
+
+            <div class="row" style="margin-top: 20px;">
+                <button class="btn btn-primary" onclick="addContact()">Add to Fleet</button>
+                <button class="btn btn-ghost" onclick="closeAddModal()">Cancel</button>
+            </div>
+            
+            <span id="addContactResult"></span>
+        </div>
     </div>
+</div>
 
-    <!-- Contact Cards -->
-    <div class = "contact-cards">
-        <template>
-        <article class = "card">
-            <h3 class="firstName">John <span class = "lastName">Doe</span></h3>
-            <div class="info"> [Email] </div>
-            <div class="phoneNumber">[Phone]</div>
-        </article>
-        </template>
-    </div>
+<template id="contactCardTemplate">
+    <article class="card">
+        <div class="card-actions">
+            <button class="edit-btn" title="Edit"><i class="fas fa-edit"></i></button>
+            <button class="delete-btn" title="Delete"><i class="fas fa-trash"></i></button>
+        </div>
 
+        <h3 class="name-header">
+            <span class="firstName"></span> <span class="lastName"></span>
+        </h3>
 
-    <!-- Footer: Information Center -->
-    <footer>
-        <p>COP4331 - Team 27 &copy; Spring 2026 Contact Page</p>
-    </footer>
-
-    <script>
-        // 1. First, pull the data from the cookies
-        readCookie(); 
-
-        // 2. Insert into the Navbar (Small version)
-        document.getElementById("namePlateText").innerText = `${firstName} ${lastName}`;
-
-        // 3. Insert into the Welcome Header (Big version)
-        //document.getElementById("welcomeName").innerText = firstName;
-    </script>
-
-        
+        <div class="Email"></div>
+        <div class="Phone"></div>
+    </article>
+</template>
 </body>
 </html>

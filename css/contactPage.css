@@ -5,9 +5,45 @@
     font-family: 'Inter', sans-serif;
 }
 
+:root {
+    /* The core colors from your partner's theme */
+    --deep0: #01050e;
+    --deep1: #021227;
+    --deep2: #032a45;
+    --deep3: #045f8a;
+
+    --text: #eaf6ff;
+    --muted: rgba(234,246,255,.74);
+
+    --accent: #33d6ff;
+    --accent2: #41ffb5;
+
+    --danger: #ff6b6b;
+
+    /* These are vital for the "Glass" look of your panels */
+    --cardA: rgba(2, 16, 30, 0.62);
+    --cardB: rgba(2, 16, 30, 0.86);
+
+    --stroke: rgba(255,255,255,.14);
+    --shadow: 0 28px 90px rgba(0,0,0,.70);
+    --radius: 18px;
+}
+
 body {
-    background: linear-gradient(180deg,#FAE8B4 50%, #d9dbc5f8 100%);
-    color: #1e293b;
+    margin: 0;
+    font-family: 'Ubuntu', sans-serif; /* Partner uses Ubuntu */
+    color: var(--text);
+    background: linear-gradient(180deg, var(--deep2) 0%, var(--deep1) 48%, var(--deep0) 100%);
+    min-height: 100vh;
+}
+
+.shell {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    display: grid;
+    grid-template-columns: 350px 1fr; /* 350px for the controls, the rest for cards */
+    gap: 30px;
 }
 
 /* ========== Navigation Bar ======== */
@@ -51,6 +87,12 @@ body {
 }
 
 /* ========= Search Bar Design ===============*/
+.search-controls {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
 .search-wrapper {
     margin: 40px auto; /* 40px top/bottom gives the navbar breathing room */
     display: flex;
@@ -66,35 +108,55 @@ body {
 }
 
 #searchText {
-    /* Shape & Size */
-    width: 100%;           /* Fills the container */
-    max-width: 400px;      /* Prevents it from getting too huge on desktop */
-    padding: 12px 20px;    /* Adds space inside: 12px top/bottom, 20px sides */
-    border-radius: 50px;   /* Makes it a pill shape */
-    
-    /* Visuals */
-    border: 2px solid #065e91; /* Matches your blue theme */
-    background-color: #ffffff;
-    font-size: 18px;
-    outline: none;         /* Removes the default browser "glow" */
-    
-    /* Smoothness */
-    transition: all 0.3s ease; /* Makes the focus effect smooth */
-
-    background-color: rgba(255, 255, 255, 0.2); /* Semi-transparent white */
-    backdrop-filter: blur(5px);                 /* Blurs the blue gradient behind the bar */
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    color: white;
+    width: 100%;
+    padding: 14px 22px;
+    border-radius: 12px; /* Switching from "pill" to partner's rounded-square style */
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid var(--stroke);
+    color: var(--text);
+    font-size: 16px;
+    outline: none;
+    transition: border-color .15s ease, box-shadow .15s ease;
 }
 
 #searchText:focus {
-    border-color: #7cb9dc;
-    box-shadow: 0 0 8px rgba(165, 179, 165, 0.6);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 4px rgba(51, 214, 255, 0.12);
 }
 
 #searchText::placeholder {
     color: rgba(255, 255, 255, 0.7);            /* Makes the placeholder text lighter white */
 }
+
+/* ========= Add Buttons ========== */
+.add-btn {
+    background: #41ffb5; /* Seafoam accent from your theme */
+    color: #021227;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 50px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.add-btn:hover {
+    transform: scale(1.05);
+    filter: brightness(1.1);
+}
+
+.edit-btn, .delete-btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #065e91;
+    border-radius: 5px;
+    padding: 5px 8px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.edit-btn:hover { background: #43a0eb; color: white; }
+.delete-btn:hover { background: #ff6b6b; color: white; border-color: #ff6b6b; }
 
 /* ========= Inputs ===========*/
 input[type="text"], input[type="password"], input[type="search"] {
@@ -125,37 +187,46 @@ input[type="text"], input[type="password"], input[type="search"] {
     width: 90%;
     margin: 30px auto;
 }
-
 .card {
-    background-color: #FAE8B4; /* Matches your login box */
-    border-radius: 15px;      /* Rounded corners */
-    padding: 15px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    transition: transform 0.2s; /* Pop effect on hover */
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    margin: 0;
+    /* Glassmorphism effect: semi-transparent with a blur */
+    background: linear-gradient(180deg, var(--cardA), var(--cardB));
+    border: 1px solid var(--stroke);
+    border-radius: var(--radius);
+    padding: 20px;
+    backdrop-filter: blur(14px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    transition: transform 0.3s ease, border-color 0.3s ease;
+    position: relative;
+    overflow: hidden;
 }
 
 .card:hover {
-    transform: translateY(-5px); /* Lift the card slightly */
-    box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+    transform: translateY(-5px);
+    border-color: var(--accent); /* Glows blue on hover */
 }
 
-.card > .firstName {
-    font-family: 'Trade Winds', cursive;
-    font-size: 1.2em;
-    margin-bottom: 5px;
-    color: #0e2b9d;
+/* Styling the text inside the cards based on your variable classes */
+.card .firstName, .card .lastName {
+    display: inline-block;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--accent2); /* Seafoam green for the name */
+    margin-bottom: 10px;
 }
 
-.card > .info {
-    font-family: 'Trade Winds', cursive;
-    color: #0e989d;
+.card .Email, .card .Phone {
+    font-size: 0.9rem;
+    color: var(--muted); /* Muted light blue for details */
+    margin-top: 5px;
 }
 
-.hide{
-    display: none;
+/* Action buttons (Edit/Delete) positioned in the top right */
+.card-actions {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    display: flex;
+    gap: 8px;
 }
 
 /* Foot Design */
@@ -168,4 +239,36 @@ footer {
 
 footer p{
     color: white;
+}
+
+
+/* Modal Background (Dimming the rest of the screen) */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+/* Modal Box */
+.modal-content {
+    width: min(400px, 90%);
+    padding: 30px;
+    animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+    from { transform: translateY(-20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.hide { display: none !important; }
+
+.modal-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
 }
