@@ -131,8 +131,8 @@ input[type="text"], input[type="password"] {
     /* Added border coloring */
     input[type="text"]:focus, input[type="password"]:focus {
     border-color: #7cb9dc;
-    box-shadow: 0 0 10px #7cb9dc;
-    background-color: #ffffff;
+    box-shadow: 0 0 8px rgba(124, 185, 220, 0.3);
+    background-color: #1b3a40;
 }
 
 #inner-title{
@@ -143,7 +143,7 @@ input[type="text"], input[type="password"] {
     margin-left: 5%;
     margin-bottom: 2%;
     font-family: 'Trade Winds', cursive;
-    color: 562B08;
+    color: #562B08;
 }
 
 #loginResult{
