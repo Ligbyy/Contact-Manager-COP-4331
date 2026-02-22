@@ -243,7 +243,7 @@
       border-radius: 16px;
       background:
         radial-gradient(circle at 28% 30%, rgba(255,255,255,.30), transparent 55%),
-        linear-gradient(135deg, rgba(51,214,255,.98), rgba(65,255,181,.78));
+        linear-gradient(135deg, rgba(51,214,255,.98), rgba(0,105,148,.78));
       box-shadow: 0 18px 40px rgba(0,0,0,.50);
       border: 1px solid rgba(255,255,255,.12);
       position:relative;
@@ -524,47 +524,34 @@
 
   <!-- UI -->
   <div class="shell">
-    <div class="topbar">
-      <div class="brand">
-        <div class="logo" aria-hidden="true"></div>
-        <div>
-          <h1>Contact Manager</h1>
-          <p>Deep Sea Theme • Sharks cruising behind you 🦈</p>
-        </div>
-      </div>
-    </div>
-
     <div class="card">
       <section class="panel hero">
-        <h2>Welcome back</h2>
-        <p>
-          Dive deep and manage your contacts.
+	      <h2 style='text-align: center; padding-top: 8px'>Welcome to<br>Diver's Manifest</h2>
+        <p style='text-align: center;'>
+          Easy to use contact management
         </p>
 
 
       </section>
 
       <section class="panel form">
-        <h3>Sign in</h3>
+        <h2 id="signinHeader" style='text-align: center;'>Sign In</h2>
 
         <div class="field">
-          <div class="label">Username</div>
-          <input class="input" type="text" id="loginName" placeholder="Enter your username" autocomplete="username" />
+          <input class="input" type="text" id="loginName" placeholder="Username" autocomplete="username" />
         </div>
 
         <div class="field">
-          <div class="label">Password</div>
-          <input class="input" type="password" id="loginPassword" placeholder="Enter your password" autocomplete="current-password" />
+          <input class="input" type="password" id="loginPassword" placeholder="Password" autocomplete="current-password" />
         </div>
 
         <div class="row">
           <button type="button" class="btn btn-primary" onclick="doLogin();">
-            <span aria-hidden="true">🦈</span>
-            Login
+            Sign In
           </button>
 
           <a href="registerPage.html" class="btn btn-ghost">
-            Create account
+            New User
           </a>
         </div>
 
